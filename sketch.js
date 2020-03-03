@@ -1,11 +1,9 @@
-const width = 700;
-const height = 700;
-
 let msX = 0;
 let msY = 0;
 let lmsX = 0;
 let lmsY = 0;
 
+let scl = 1;
 let top1;
 let top2;
 let top3;
@@ -21,13 +19,16 @@ let mt3;
 let mt4;
 
 
-
-
-
 function setup() {
-  createCanvas(width, height, WEBGL);
+  createCanvas(windowWidth, windowHeight, WEBGL);
   angleMode(DEGREES);
-  ortho(-width / 2, width / 2, -height / 2, height / 2, 0, 1000);
+  let maxAspect = max(width, height);
+  ortho(-width / 2, width / 2, -height / 2, height / 2, 0, maxAspect);
+  
+  if (width < 800) {
+    scl = width/800;
+  }
+  
   //frustum(-100, 100, 100, -100, 100, -100)
   
   directionalLight(126, 126, 126, 0, 0, -1);
@@ -66,37 +67,19 @@ function setup() {
 }
 
 function draw() {
-
-  xAngle = map(700 + msY, 0, 700, 30, -30)
+  
+  xAngle = map(750 + msY, 0, 700, 30, -30)
   yAngle = map(700/4*3 + msX, 0, 700, -90, 90) 
   lmsX = mouseX;
   lmsY = mouseY;
   background(255);
   fill(255);
   noStroke()
-  //translate(0, 0, -100)
+  scale(scl);
+
   rotateX(xAngle);
   rotateY(yAngle);
-  /*push()
-    translate(0, 0, -100)
-    box(300, 300, 100)
-  pop()
-  push()
-    translate(0, 100, 00)
-    box(300, 100, 300)
-  pop()
-  push()
-    translate(100, 000, 100)
-    box(100, 300, 100)
-  pop()
-  push()
-    
-    translate(00, -100, 100)
-    box(300, 100, 100)
-  pop()
-*/
-  //stroke(	0, 47, 167);
-  //strokeWeight(10);
+
 
   beginShape();
   vectorVertex(top1);
@@ -378,4 +361,15 @@ function vectorBox(v1, v2) {
   box(s.x, s.y, s.z);
   pop()
 
+}
+
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  let maxAspect = max(width, height);
+  ortho(-width / 2, width / 2, -height / 2, height / 2, 0, 3000);
+
+  if (width < 800) {
+    scl = width/800;
+  }
 }
