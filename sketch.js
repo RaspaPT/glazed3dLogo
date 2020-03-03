@@ -324,6 +324,12 @@ function mouseMoved() {
   return false;
 }
 
+function touchMoved() {
+  msX += mouseX - lmsX;
+  msY += mouseY - lmsY;
+  return false;
+}
+
 function vectorBox(v1, v2) {
   //top1 = createVector(150, -150, -150);
   //top2 = createVector(150, -150, -50);
