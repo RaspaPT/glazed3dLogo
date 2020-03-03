@@ -1,6 +1,11 @@
 const width = 700;
 const height = 700;
 
+let msX = 0;
+let msY = 0;
+let lmsX = 0;
+let lmsY = 0;
+
 let top1;
 let top2;
 let top3;
@@ -22,7 +27,11 @@ let mt4;
 function setup() {
   createCanvas(width, height, WEBGL);
   angleMode(DEGREES);
+  ortho(-width / 2, width / 2, -height / 2, height / 2, 0, 1000);
+  //frustum(-100, 100, 100, -100, 100, -100)
   
+  directionalLight(126, 126, 126, 0, 0, -1);
+  ambientLight(102, 102, 102);
 
   top1 = createVector(150, -150, -150);
   top2 = createVector(150, -150, -50);
@@ -57,11 +66,15 @@ function setup() {
 }
 
 function draw() {
-  xAngle = map(mouseY, 0, 600, 30, -30)
-  yAngle = map(mouseX, 0, 600, -90, 90)
+
+  xAngle = map(700 + msY, 0, 700, 30, -30)
+  yAngle = map(700/4*3 + msX, 0, 700, -90, 90) 
+  lmsX = mouseX;
+  lmsY = mouseY;
   background(255);
   fill(255);
   noStroke()
+  //translate(0, 0, -100)
   rotateX(xAngle);
   rotateY(yAngle);
   /*push()
@@ -82,8 +95,8 @@ function draw() {
     box(300, 100, 100)
   pop()
 */
-  stroke(	0, 47, 167);
-  strokeWeight(10);
+  //stroke(	0, 47, 167);
+  //strokeWeight(10);
 
   beginShape();
   vectorVertex(top1);
@@ -209,67 +222,86 @@ function draw() {
   vectorVertex(mb5);
   endShape();
 
+  noStroke();
+  fill(255,0,0);
+
   fill(0, 47, 167)
-  vectorSpehre(top1);
-  vectorSpehre(top2);
-  vectorSpehre(top3);
-  vectorSpehre(top4);
-  vectorSpehre(top5);
-  vectorSpehre(top6);
-  vectorSpehre(top7);
-  vectorSpehre(top8);
+  vectorSquare(top1);
+  vectorSquare(top2);
+  vectorSquare(top3);
+  vectorSquare(top4);
+  vectorSquare(top5);
+  vectorSquare(top6);
+  vectorSquare(top7);
+  vectorSquare(top8);
 
-  vectorSpehre(mt1);
-  vectorSpehre(mt2);
-  vectorSpehre(mt3);
-  vectorSpehre(mt4);
+  vectorSquare(mt1);
+  vectorSquare(mt2);
+  vectorSquare(mt3);
+  vectorSquare(mt4);
 
 
-  vectorSpehre(mb1);
-  vectorSpehre(mb2);
-  vectorSpehre(mb3);
-  vectorSpehre(mb5);
-  vectorSpehre(mb6);
-  vectorSpehre(mb7);
+  vectorSquare(mb1);
+  vectorSquare(mb2);
+  vectorSquare(mb3);
+  vectorSquare(mb5);
+  vectorSquare(mb6);
+  vectorSquare(mb7);
 
-  vectorSpehre(b1);
-  vectorSpehre(b2);
-  vectorSpehre(b3);
-  vectorSpehre(b4);
+  vectorSquare(b1);
+  vectorSquare(b2);
+  vectorSquare(b3);
+  vectorSquare(b4);
+
   
 
- 
- /*
 
-  vectorLine(top1, top2);
-  vectorLine(top2, top4);
-  vectorLine(top4, top3);
-  vectorLine(top3, top1);
+  vectorBox(top1, top2);
+  vectorBox(top2, top4);
+  vectorBox(top4, top3);
+  vectorBox(top3, top1);
 
-  vectorLine(top5, top6);
-  vectorLine(top6, top8);
-  vectorLine(top8, top7);
-  vectorLine(top7, top5);
+  vectorBox(top5, top6);
+  vectorBox(top6, top8);
+  vectorBox(top8, top7);
+  vectorBox(top7, top5);
 
-  vectorLine(top7, mt3);
-  vectorLine(top8, mt4);
+  vectorBox(top7, mt3);
+  vectorBox(top8, mt4);
 
-  vectorLine(mt1, mt2);
-  vectorLine(mt2, mt4);
-  vectorLine(mt4, mt3);
-  vectorLine(mt3, mt1);
+  vectorBox(mt1, mt2);
+  vectorBox(mt2, mt4);
+  vectorBox(mt4, mt3);
+  vectorBox(mt3, mt1);
 
-  vectorLine(mb1, mb2);
-  vectorLine(mb1, mb3);
-  vectorLine(mb2, mb7);
-  vectorLine(mb3, mb5);
-  vectorLine(mb5, mb6);
-  vectorLine(mt1, mb5);
-  vectorLine(mt2, mb6);
-  vectorLine(mb6, mb7);
+  vectorBox(mb1, mb2);
+  vectorBox(mb1, mb3);
+  vectorBox(mb2, mb7);
+  vectorBox(mb3, mb5);
+  vectorBox(mb5, mb6);
+  vectorBox(mt1, mb5);
+  vectorBox(mt2, mb6);
+  vectorBox(mb6, mb7);
 
-  vectorLine(top2, mb1);
-  vectorLine(top5, mb3);*/
+  vectorBox(top2, mb1);
+  vectorBox(top5, mb3);
+  vectorBox(top1, b1);
+  vectorBox(top3, b3);
+  vectorBox(top4, mb2);
+  vectorBox(top6, b2);
+
+  vectorBox(b1, b2);
+  vectorBox(b2, b4);
+  vectorBox(b4, b3);
+  vectorBox(b3, b1);
+
+
+  if (msX > .01 || msX < -.01) {
+    msX *= .9;
+  } 
+  if (msY > .01 || msY < -.01) {
+    msY *= .9;
+  }
 
 
 
@@ -289,4 +321,61 @@ function vectorSpehre(v) {
   translate(v.x, v.y, v.z);
   sphere(4);
   pop()
+}
+
+function vectorSquare(v) {
+  push()
+  translate(v.x, v.y, v.z);
+  box(10);
+  pop()
+}
+
+function mouseClicked() {
+ 
+  msY = mouseY;
+}
+
+function mouseMoved() {
+  msX += mouseX - lmsX;
+  msY += mouseY - lmsY;
+  return false;
+}
+
+function vectorBox(v1, v2) {
+  //top1 = createVector(150, -150, -150);
+  //top2 = createVector(150, -150, -50);
+  //top4 = createVector(-150, -150, -50);
+  
+
+  t = createVector(0,0,0);
+  s = createVector(10,10,10);
+  if (v1.x === v2.x) {
+    t.x = v1.x;
+  } else {
+    s.x = abs(v1.x - v2.x);
+    t.x = abs(v1.x) - abs(v2.x);
+  }
+
+  if (v1.y === v2.y) {
+    t.y = v1.y;
+  } else {
+    s.y = abs(v1.y - v2.y);
+    t.y = abs(v1.y) - abs(v2.y);
+  }
+
+  if (v1.z === v2.z) {
+    t.z = v1.z;
+  } else {
+    s.z = abs(v1.z - v2.z);
+    t.z = abs(v1.z) - abs(v2.z);
+  }
+
+  push();
+//  translate(t.x, t.y, t.z);
+  translate(v1.x, v1.y, v1.z);
+  translate((v2.x-v1.x)/2, (v2.y-v1.y)/2, (v2.z-v1.z)/2);
+  
+  box(s.x, s.y, s.z);
+  pop()
+
 }
